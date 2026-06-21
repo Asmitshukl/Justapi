@@ -1,12 +1,15 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
+	"log/slog"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/Asmitshukl/apiitis/internal/config"
 )
@@ -42,5 +45,18 @@ func main() {
 	}()
 
 	<-done
-	
+	slog.Info("shutting down the server")
+
+	ctx,cancel := context.WithTimeout(context.Background(),5 * time.Second)
+	defer cancel()
+
+
+
+	// err := server.Shutdown(ctx)
+
+	if err := server.Shutdown(ctx) ; err != nil {
+		slog.Error("failed to shutdown server" ,slog.String("error" , err.Error()))
+	}
+
+	slog.Info("server stopped successfully")
 }
