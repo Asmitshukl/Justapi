@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/Asmitshukl/apiitis/internal/config"
+	"github.com/Asmitshukl/apiitis/internal/http/handlers/student"
 )
 
 func main() {
@@ -23,9 +24,7 @@ func main() {
 	//setup router
 	router := http.NewServeMux()
 
-	router.HandleFunc("GET /",func(w http.ResponseWriter , r *http.Request) {
-		w.Write([]byte("Welcome to just api"))
-	})
+	router.HandleFunc("POST /api/students",student.New())
 	//setup server
 	fmt.Println(" server started")
 	
