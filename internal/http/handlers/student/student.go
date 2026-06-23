@@ -7,7 +7,9 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
+	"strconv"
 
+	// "github.com/Asmitshukl/apiitis/internal/http/handlers/student"
 	"github.com/Asmitshukl/apiitis/internal/storage"
 	"github.com/Asmitshukl/apiitis/internal/types"
 	"github.com/Asmitshukl/apiitis/internal/utils/response"
@@ -55,5 +57,26 @@ func New(storage storage.Storage) http.HandlerFunc{
 		slog.Info("User created successfully",slog.String("userid",fmt.Sprint(id)))
 
 		response.WriteJson(w , http.StatusCreated , map[string]int64{"id": id})
+	}
+}
+
+func GetById(storage storage.Storage) http.HandlerFunc{
+	return func(w http.ResponseWriter , r *http.Request) {
+		//implement get by id logic here
+		id := r.PathValue("id")
+		slog.Info("getting a student",slog.String("id",id))
+
+		intid , err := strconv.ParseInt(id , 10 ,64)
+		if err != nil {
+			response.WriteJson(w,http.StatusBadRequest,err)
+		}
+		student , err := storage.GetStudentById(intid)
+		if err != nil {
+			slog.Error("error getting user" ,slog.String("id",id))
+			response.WriteJson(w, http.StatusInternalServerError , response.GeneralError(err))
+			return 
+		}
+
+		response.WriteJson(w , http.StatusOK , student)
 	}
 }
