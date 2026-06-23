@@ -22,7 +22,7 @@ func main() {
 
 	//setup datbase
 
-	_, err := sqlite.New(cfg)
+	storage, err := sqlite.New(cfg)
 
 	if err != nil {
 		log.Fatalf("failed to setup database %s", err.Error())
@@ -31,7 +31,7 @@ func main() {
 	//setup router
 	router := http.NewServeMux()
 
-	router.HandleFunc("POST /api/students",student.New())
+	router.HandleFunc("POST /api/students",student.New(storage))
 	//setup server
 	fmt.Println(" server started")
 	
