@@ -13,6 +13,7 @@ import (
 
 	"github.com/Asmitshukl/apiitis/internal/config"
 	"github.com/Asmitshukl/apiitis/internal/http/handlers/student"
+	"github.com/Asmitshukl/apiitis/internal/storage/sqlite"
 )
 
 func main() {
@@ -21,6 +22,12 @@ func main() {
 
 	//setup datbase
 
+	_, err := sqlite.New(cfg)
+
+	if err != nil {
+		log.Fatalf("failed to setup database %s", err.Error())
+	}
+	slog.Info("database setup successfully",slog.String("env",cfg.Env))
 	//setup router
 	router := http.NewServeMux()
 
